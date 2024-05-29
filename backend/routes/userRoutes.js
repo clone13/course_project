@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
   connection.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching users:", err);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: "Internal server error 0" });
       return;
     }
     res.status(200).json(results);
@@ -25,7 +25,7 @@ router.post("/login", async (req, res) => {
   connection.query(getUserQuery, [email], async (err, results) => {
     if (err) {
       console.error("Error fetching user:", err);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: "Internal server error 1" });
       return;
     }
 
@@ -61,7 +61,7 @@ router.post("/login", async (req, res) => {
       res.status(200).json({ token });
     } catch (error) {
       console.error("Error comparing password:", error);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: "Internal server error 3" });
     }
   });
 });
@@ -74,7 +74,7 @@ router.post("/register", async (req, res) => {
   connection.query(userExistsQuery, [email], async (err, results) => {
     if (err) {
       console.error("Error checking if user exists:", err);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: "Internal server error 4" });
       return;
     }
 
@@ -97,7 +97,7 @@ router.post("/register", async (req, res) => {
         (err, results) => {
           if (err) {
             console.error("Error registering user:", err);
-            res.status(500).json({ message: "Internal server error" });
+            res.status(500).json({ message: "Internal server error 5" });
             return;
           }
           res.status(201).json({ message: "User registered successfully" });
@@ -105,7 +105,7 @@ router.post("/register", async (req, res) => {
       );
     } catch (error) {
       console.error("Error hashing password:", error);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: "Internal server error 6" });
     }
   });
 });
@@ -125,7 +125,7 @@ router.post("/block/:id", async (req, res) => {
     }
   } catch (err) {
     console.error("Error blocking user:", err);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error 7" });
   }
 });
 
@@ -144,7 +144,7 @@ router.post("/unblock/:id", async (req, res) => {
     }
   } catch (err) {
     console.error("Error unblocking user:", err);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error 8" });
   }
 });
 
@@ -163,7 +163,7 @@ router.post("/delete/:id", async (req, res) => {
     }
   } catch (err) {
     console.error("Error deleted user:", err);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error 9" });
   }
 });
 
