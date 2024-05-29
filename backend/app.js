@@ -1,36 +1,29 @@
 const express = require("express");
-const path = require("path");
-const mysql = require("mysql");
-const dotenv = require("dotenv");
-
-dotenv.config({ path: "./.env" });
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const userRoutes = require("./routes/userRoutes");
+const connection = require("./dbConfig");
 
 const app = express();
 
-const db = mysql.createConnection({
-  host: process.env.DATABASE_HOST,
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE,
+// Middleware
+app.use(bodyParser.json());
+app.use(cors());
+
+// Routes
+app.use("/api/users", userRoutes);
+
+// Start server
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
 
-const publicDirectory = path.join(__dirname, "./public");
-app.use(express.static(publicDirectory));
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-db.connect((err) => {
+// Check MySQL connection
+connection.connect((err) => {
   if (err) {
-    console.log(err);
-  } else {
-    console.log("MySQL connected");
+    console.error("Error connecting to MySQL:", err);
+    return;
   }
-});
-
-app.use("/", require("./routes/pages"));
-app.use("/auth", require("./routes/auth"));
-
-app.listen(5000, () => {
-  console.log("server is running at 5000");
+  console.log("Connected to MySQL database");
 });
