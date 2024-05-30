@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import Toolbar from "./Toolbar";
+import CollectionForm from "./CollectionForm";
+import ItemForm from "./ItemForm";
 
 const UserManagement = () => {
   const [whoIsUser, setWhoIsUser] = useState("");
@@ -14,9 +16,7 @@ const UserManagement = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          "https://course-project-wk3m.onrender.com/api/users"
-        );
+        const response = await axios.get("http://localhost:5000/api/users");
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -66,9 +66,7 @@ const UserManagement = () => {
     for (let i = 0; i < selectedUsers.length; i++) {
       try {
         const element = selectedUsers[i];
-        await axios.post(
-          `https://course-project-wk3m.onrender.com/api/users/block/${element}`
-        );
+        await axios.post(`http://localhost:5000/api/users/block/${element}`);
         console.log(`User(s) with ID(s) ${element} blocked successfully.`);
         const updatedUsers = users.map((user) =>
           selectedUsers.includes(user.id)
@@ -79,9 +77,7 @@ const UserManagement = () => {
       } catch (error) {
         console.error("Error blocking user(s):", error);
         // Refetch data if blocking fails
-        const response = await axios.get(
-          "https://course-project-wk3m.onrender.com/api/users"
-        );
+        const response = await axios.get("http://localhost:5000/api/users");
         setUsers(response.data);
       }
     }
@@ -91,9 +87,7 @@ const UserManagement = () => {
     for (let i = 0; i < selectedUsers.length; i++) {
       try {
         const element = selectedUsers[i];
-        await axios.post(
-          `https://course-project-wk3m.onrender.com/api/users/unblock/${element}`
-        );
+        await axios.post(`http://localhost:5000/api/users/unblock/${element}`);
         console.log(`User(s) with ID(s) ${element} unblocked successfully.`);
 
         const updatedUsers = users.map((user) =>
@@ -103,9 +97,7 @@ const UserManagement = () => {
       } catch (error) {
         console.error("Error unblocking user(s):", error);
         // Refetch data if unblocking fails
-        const response = await axios.get(
-          "https://course-project-wk3m.onrender.com/api/users"
-        );
+        const response = await axios.get("http://localhost:5000/api/users");
         setUsers(response.data);
       }
     }
@@ -115,9 +107,7 @@ const UserManagement = () => {
     for (let i = 0; i < selectedUsers.length; i++) {
       try {
         const element = selectedUsers[i];
-        await axios.post(
-          `https://course-project-wk3m.onrender.com/api/users/delete/${element}`
-        );
+        await axios.post(`http://localhost:5000/api/users/delete/${element}`);
         console.log(`User(s) with ID(s) ${element} deleted successfully.`);
         setSelectedUsers([]);
         const updatedUsers = users.filter(
@@ -127,9 +117,7 @@ const UserManagement = () => {
       } catch (error) {
         console.error("Error deleting user(s):", error);
         // Refetch data if deletion fails
-        const response = await axios.get(
-          "https://course-project-wk3m.onrender.com/api/users"
-        );
+        const response = await axios.get("http://localhost:5000/api/users");
         setUsers(response.data);
       }
     }
@@ -181,6 +169,8 @@ const UserManagement = () => {
       </div>
       <div className="container">
         <div className=" mt-3">
+          <CollectionForm />
+          <ItemForm />
           <div>
             <h2>User Management</h2>
             <div style={{ margin: "30px" }}>
@@ -205,6 +195,7 @@ const UserManagement = () => {
                   </th>
                   <th>Email</th>
                   <th>Last Login</th>
+                  <th>Role</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -222,7 +213,8 @@ const UserManagement = () => {
                     </td>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
-                    <td>{user.last_login_time}</td>
+                    <td>{user.updated_at}</td>
+                    <td>{user.role}</td>
                     <td>{user.status}</td>
                   </tr>
                 ))}

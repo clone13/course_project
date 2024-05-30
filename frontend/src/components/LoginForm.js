@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const LoginForm = ({ onLogin }) => {
   const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ const LoginForm = ({ onLogin }) => {
 
     try {
       const response = await axios.post(
-        "https://course-project-wk3m.onrender.com/api/users/login/",
+        "http://localhost:5000/api/users/login/",
         {
           email,
           password,
@@ -88,10 +89,12 @@ const LoginForm = ({ onLogin }) => {
         </div>
         {backendError && <p className="text-danger">{backendError}</p>}
         <div>
-          <p>Not a member?</p>
           <button className="btn btn-link" onClick={handleClickRoute}>
             REGISTRATION
           </button>
+          <Link className="nav-link btn btn-link" to="/home">
+            Home Page
+          </Link>
         </div>
       </div>
     </>

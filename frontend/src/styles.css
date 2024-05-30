@@ -27,3 +27,9 @@
     align-items: center;
     justify-content: center;
   }
+
+  .nav-link{
+    margin: 30px;
+    padding: 5px;
+    border: 1px solid black;
+  }
