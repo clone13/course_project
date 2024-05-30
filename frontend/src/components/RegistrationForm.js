@@ -28,7 +28,7 @@ const RegistrationForm = ({ onRegister }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/users/register",
+        "https://course-project-wk3m.onrender.com/api/users/register",
         {
           name: name,
           email: email,

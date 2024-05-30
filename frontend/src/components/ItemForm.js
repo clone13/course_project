@@ -12,7 +12,9 @@ const ItemForm = () => {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/items");
+        const response = await axios.get(
+          "https://course-project-wk3m.onrender.com/api/items"
+        );
         setItems(response.data);
       } catch (error) {
         console.error("Error fetching items:", error);
@@ -26,12 +28,15 @@ const ItemForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5000/api/items", {
-        name,
-        tags,
-        customData,
-        collectionId,
-      });
+      const response = await axios.post(
+        "https://course-project-wk3m.onrender.com/api/items",
+        {
+          name,
+          tags,
+          customData,
+          collectionId,
+        }
+      );
 
       setMessage("Item created successfully");
       setItems([...items, response.data]);

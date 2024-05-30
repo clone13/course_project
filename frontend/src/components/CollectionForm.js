@@ -15,7 +15,7 @@ const CollectionForm = () => {
     const fetchCollections = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/collections"
+          "https://course-project-wk3m.onrender.com/api/collections"
         );
         setCollections(response.data);
       } catch (error) {
@@ -31,7 +31,7 @@ const CollectionForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/collections",
+        "https://course-project-wk3m.onrender.com/api/collections",
         {
           name,
           description,
