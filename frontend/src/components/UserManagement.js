@@ -4,7 +4,6 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const UserManagement = () => {
-  const [whoIsUser, setWhoIsUser] = useState("");
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc");
@@ -32,10 +31,10 @@ const UserManagement = () => {
       const foundUser = users.find((item) => item.email === userEmail);
       if (foundUser) {
         const { name, status } = foundUser;
-        setWhoIsUser(name);
+        localStorage.setItem("userName", name);
         if (status === "blocked") {
-          setWhoIsUser("");
           localStorage.removeItem("token");
+          localStorage.removeItem("userName");
           localStorage.removeItem("userEmail");
         }
       }
@@ -195,28 +194,37 @@ const UserManagement = () => {
 
   const logOutHandler = () => {
     history.push("/");
-    setWhoIsUser("");
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
     localStorage.removeItem("token");
   };
 
   return (
     <div className="my-div">
       <div className="navbar navbar-expand-lg bg-light">
-        <div className="container justify-content-end">
+        <div className="container justify-content-space-between">
           <div className="me-2">
-            Hello, <b>{whoIsUser}</b>!
+            Hello, <b>{localStorage.getItem("userName")}</b>!
           </div>
-          <button className="btn btn-link" onClick={logOutHandler}>
-            Logout
-          </button>
+          <div className="d-flex">
+            <div>
+              <Link to="/home" className="btn btn-primary mb-3 nav-link">
+                Home
+              </Link>
+            </div>
+            <div>
+              <button
+                className="btn btn-primary nav-link"
+                onClick={logOutHandler}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <div className="container">
         <div className="mt-3">
-          <Link to="/home" className="btn btn-primary mb-3">
-            Home
-          </Link>
           <h2>User Management</h2>
           <div className="mb-3">
             <button className="btn btn-success me-2" onClick={handleAddAdmin}>

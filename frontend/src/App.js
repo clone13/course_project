@@ -10,6 +10,7 @@ import UserManagement from "./components/UserManagement";
 import Home from "./components/Home";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles.css";
+import UserPage from "./components/UserPage";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/login" component={LoginForm} />
         <Route path="/registration" component={RegistrationForm} />
         <Route path="/home" component={Home} />
+        <Route path="/user" component={UserPage} />
         <PrivateRoute path="/usermanagement" component={UserManagement} />
       </Switch>
     </Router>

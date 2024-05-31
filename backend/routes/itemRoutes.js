@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.post("/", (req, res) => {
+router.post("/create", (req, res) => {
   const { name, tags, customData, collectionId } = req.body;
 
   const insertItemQuery =
@@ -33,7 +33,7 @@ router.post("/", (req, res) => {
   );
 });
 
-router.put("/:id", (req, res) => {
+router.put("/edit/:id", (req, res) => {
   const { id } = req.params;
   const { name, tags, customData, collectionId } = req.body;
 
@@ -53,7 +53,7 @@ router.put("/:id", (req, res) => {
   );
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/delete/:id", (req, res) => {
   const { id } = req.params;
 
   const deleteItemQuery = "DELETE FROM items WHERE id = ?";

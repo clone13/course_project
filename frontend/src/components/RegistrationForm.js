@@ -14,9 +14,9 @@ const RegistrationForm = ({ onRegister }) => {
     history.push("/login");
   };
 
-  const handleHistory = () => {
-    history.push("/usermanagement");
-  };
+  // const handleHistory = () => {
+  //   history.push("/usermanagement");
+  // };
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ const RegistrationForm = ({ onRegister }) => {
       );
       localStorage.setItem("userEmail", email);
       console.log(response.data);
-      handleHistory();
+      handleClickRoute();
     } catch (error) {
       // Handle error
       setErrorMessage(error.response.data.message);
