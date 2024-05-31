@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const connection = require("../dbConfig");
 
-// Get all collections and their items
 router.get("/", (req, res) => {
   const sql = `
     SELECT collections.id, collections.name, collections.description, collections.category, collections.imageUrl, collections.customFields, collections.authorId,

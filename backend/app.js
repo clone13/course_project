@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
 const collectionRoutes = require("./routes/collectionRoutes");
+const itemRoutes = require("./routes/itemRoutes");
 const connection = require("./dbConfig");
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(cors());
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/collections", collectionRoutes);
+app.use("/api/items", itemRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
