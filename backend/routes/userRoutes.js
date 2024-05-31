@@ -157,4 +157,40 @@ router.post("/delete/:id", async (req, res) => {
   }
 });
 
+router.post("/addAdmin/:id", async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const sql = "UPDATE users SET role = ? WHERE id = ?";
+    const [updateResult] = await connection.query(sql, ["admin", userId]);
+
+    if (updateResult.affectedRows === 1) {
+      res.status(200).json({ message: "User successfully role set admin" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    console.error("Error setting role user:", err);
+    res.status(500).json({ message: "Internal server error 10" });
+  }
+});
+
+router.post("/removeAdmin/:id", async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const sql = "UPDATE users SET role = ? WHERE id = ?";
+    const [updateResult] = await connection.query(sql, ["user", userId]);
+
+    if (updateResult.affectedRows === 1) {
+      res.status(200).json({ message: "User successfully role set user" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    console.error("Error setting role user:", err);
+    res.status(500).json({ message: "Internal server error 10" });
+  }
+});
+
 module.exports = router;

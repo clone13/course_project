@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Home = () => {
   const [collections, setCollections] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -22,6 +23,14 @@ const Home = () => {
 
     fetchCollections();
   }, []);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredCollections = collections.filter((collection) =>
+    collection.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="home">
@@ -48,16 +57,30 @@ const Home = () => {
                   Login
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/usermanagement">
+                  Admin
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
       </nav>
 
       <div className="container mt-4">
-        <h1>Welcome to Our Collections</h1>
+        <h1>Welcome to All Collections</h1>
         {error && <p className="text-danger">{error}</p>}
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search collections..."
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </div>
         <div className="collections">
-          {collections.map((collection) => (
+          {filteredCollections.map((collection) => (
             <div key={collection.id} className="collection mb-4">
               <h2>{collection.name}</h2>
               <p>{collection.description}</p>

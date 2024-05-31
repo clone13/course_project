@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
-import Toolbar from "./Toolbar";
-import CollectionForm from "./CollectionForm";
-import ItemForm from "./ItemForm";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const UserManagement = () => {
   const [whoIsUser, setWhoIsUser] = useState("");
@@ -25,7 +23,7 @@ const UserManagement = () => {
       }
     };
 
-    fetchUsers(); // Fetch users when the component mounts
+    fetchUsers();
   }, []);
 
   useEffect(() => {
@@ -43,7 +41,7 @@ const UserManagement = () => {
       }
     };
     userChecker();
-  });
+  }, [users]);
 
   const handleCheckboxChange = (userId, isChecked) => {
     const newSelectedUsers = [...selectedUsers];
@@ -80,7 +78,6 @@ const UserManagement = () => {
         setUsers(updatedUsers);
       } catch (error) {
         console.error("Error blocking user(s):", error);
-        // Refetch data if blocking fails
         const response = await axios.get(
           "https://course-project-wk3m.onrender.com/api/users"
         );
@@ -104,7 +101,6 @@ const UserManagement = () => {
         setUsers(updatedUsers);
       } catch (error) {
         console.error("Error unblocking user(s):", error);
-        // Refetch data if unblocking fails
         const response = await axios.get(
           "https://course-project-wk3m.onrender.com/api/users"
         );
@@ -124,11 +120,54 @@ const UserManagement = () => {
         setSelectedUsers([]);
         const updatedUsers = users.filter(
           (user) => !selectedUsers.includes(user.id)
-        ); // Filter out deleted users
+        );
         setUsers(updatedUsers);
       } catch (error) {
         console.error("Error deleting user(s):", error);
-        // Refetch data if deletion fails
+        const response = await axios.get(
+          "https://course-project-wk3m.onrender.com/api/users"
+        );
+        setUsers(response.data);
+      }
+    }
+  };
+
+  const handleAddAdmin = async () => {
+    for (let i = 0; i < selectedUsers.length; i++) {
+      try {
+        const element = selectedUsers[i];
+        await axios.post(
+          `https://course-project-wk3m.onrender.com/api/users/addAdmin/${element}`
+        );
+        console.log(`User(s) with ID(s) ${element} granted admin access.`);
+        const updatedUsers = users.map((user) =>
+          selectedUsers.includes(user.id) ? { ...user, role: "admin" } : user
+        );
+        setUsers(updatedUsers);
+      } catch (error) {
+        console.error("Error adding admin access to user(s):", error);
+        const response = await axios.get(
+          "https://course-project-wk3m.onrender.com/api/users"
+        );
+        setUsers(response.data);
+      }
+    }
+  };
+
+  const handleRemoveAdmin = async () => {
+    for (let i = 0; i < selectedUsers.length; i++) {
+      try {
+        const element = selectedUsers[i];
+        await axios.post(
+          `https://course-project-wk3m.onrender.com/api/users/removeAdmin/${element}`
+        );
+        console.log(`User(s) with ID(s) ${element} admin access removed.`);
+        const updatedUsers = users.map((user) =>
+          selectedUsers.includes(user.id) ? { ...user, role: "user" } : user
+        );
+        setUsers(updatedUsers);
+      } catch (error) {
+        console.error("Error removing admin access from user(s):", error);
         const response = await axios.get(
           "https://course-project-wk3m.onrender.com/api/users"
         );
@@ -161,20 +200,12 @@ const UserManagement = () => {
     localStorage.removeItem("token");
   };
 
-  // if (localStorage.getItem("emailInput")) {
-  //   setWhoIsUser(localStorage.getItem("emailInput"));
-  // }
-
-  // if (localStorage.getItem("emailInput")) {
-  //   localStorage.removeItem("token");
-  // }
-
   return (
     <div className="my-div">
-      <div className="navbar navbar-expand-lg bg-light ">
+      <div className="navbar navbar-expand-lg bg-light">
         <div className="container justify-content-end">
           <div className="me-2">
-            Hello, <b>{whoIsUser}</b> !
+            Hello, <b>{whoIsUser}</b>!
           </div>
           <button className="btn btn-link" onClick={logOutHandler}>
             Logout
@@ -182,65 +213,74 @@ const UserManagement = () => {
         </div>
       </div>
       <div className="container">
-        <div className=" mt-3">
-          <CollectionForm />
-          <ItemForm />
-          <div>
-            <h2>User Management</h2>
-            <div style={{ margin: "30px" }}>
-              <Toolbar
-                onBlock={handleBlock}
-                onUnblock={handleUnblock}
-                onDelete={handleDelete}
-              />
-            </div>
-            <table className="table table-bordered table-striped table-hover">
-              <thead>
-                <tr>
-                  <th>
+        <div className="mt-3">
+          <Link to="/home" className="btn btn-primary mb-3">
+            Home
+          </Link>
+          <h2>User Management</h2>
+          <div className="mb-3">
+            <button className="btn btn-success me-2" onClick={handleAddAdmin}>
+              Add Admin
+            </button>
+            <button
+              className="btn btn-warning me-2"
+              onClick={handleRemoveAdmin}
+            >
+              Remove Admin
+            </button>
+            <button className="btn btn-danger me-2" onClick={handleBlock}>
+              Block
+            </button>
+            <button className="btn btn-primary me-2" onClick={handleUnblock}>
+              Unblock
+            </button>
+            <button className="btn btn-danger" onClick={handleDelete}>
+              Delete
+            </button>
+          </div>
+          <table className="table table-bordered table-striped table-hover">
+            <thead>
+              <tr>
+                <th>
+                  <input
+                    type="checkbox"
+                    checked={selectedUsers.length === users.length}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                  />
+                </th>
+                <th onClick={handleSortByName} style={{ cursor: "pointer" }}>
+                  Name {sortOrder === "asc" ? "▲" : "▼"}
+                </th>
+                <th>Email</th>
+                <th>Last Login</th>
+                <th>Role</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td>
                     <input
                       type="checkbox"
-                      checked={selectedUsers.length === users.length} // Check if all selected
-                      onChange={(e) => handleSelectAll(e.target.checked)}
+                      checked={selectedUsers.includes(user.id)}
+                      onChange={(e) =>
+                        handleCheckboxChange(user.id, e.target.checked)
+                      }
                     />
-                  </th>
-                  <th onClick={handleSortByName} style={{ cursor: "pointer" }}>
-                    Name {sortOrder === "asc" ? "▲" : "▼"}
-                  </th>
-                  <th>Email</th>
-                  <th>Last Login</th>
-                  <th>Role</th>
-                  <th>Status</th>
+                  </td>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>{new Date(user.updated_at).toLocaleString()}</td>
+                  <td>{user.role}</td>
+                  <td>{user.status}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={selectedUsers.includes(user.id)}
-                        onChange={(e) =>
-                          handleCheckboxChange(user.id, e.target.checked)
-                        }
-                      />
-                    </td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.updated_at}</td>
-                    <td>{user.role}</td>
-                    <td>{user.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {/* Display selected user IDs or perform actions based on selection (optional) */}
-            {selectedUsers.length > 0 && (
-              <p>Selected user IDs: {selectedUsers.join(", ")}</p>
-            )}{" "}
-            {/* Display selected IDs */}
-            {/* You can add a button or functionality to handle the selected user IDs here */}
-          </div>
+              ))}
+            </tbody>
+          </table>
+          {selectedUsers.length > 0 && (
+            <p>Selected user IDs: {selectedUsers.join(", ")}</p>
+          )}
         </div>
       </div>
     </div>

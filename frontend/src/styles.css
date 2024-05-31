@@ -28,8 +28,16 @@
     justify-content: center;
   }
 
+  .navbar{
+    padding: 0 80px;
+  }
+
   .nav-link{
     margin: 30px;
     padding: 5px;
     border: 1px solid black;
+  }
+
+  .container-fluid{
+    padding-top: 40px;
   }
