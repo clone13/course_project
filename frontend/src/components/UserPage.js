@@ -268,7 +268,7 @@ const UserPage = () => {
                   .filter((item) => item.collectionId === collection.id)
                   .map((item) => (
                     <li key={item.id}>
-                      <strong>{item.name}</strong>: {item.tags.join(", ")}
+                      <strong>{item.NAME}</strong>: {item.tags}
                     </li>
                   ))}
               </ul>
